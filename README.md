@@ -1,5 +1,41 @@
 # WRO 2026 Future Engineers — Team PlugAndPlayers
 
+<p align="center">
+  <img src="assets/team/teamlogo.png" alt="Team PlugAndPlayers Logo" width="250"/>
+</p>
+
+## Contents
+
+- [Introduction](#introduction)
+  - [The Team](#the-team)
+  - [Engineering Journal](#engineering-journal)
+  - [Our Overview of the Challenges](#our-overview-of-the-challenges)
+- [The Robot](#the-robot)
+  - [Overview](#overview)
+  - [First Design](#first-design)
+  - [Design Decisions](#design-decisions)
+  - [Final Design](#final-design)
+- [Prices](#prices)
+- [Power](#power)
+  - [Power Budget](#power-budget)
+  - [Regulator & BEC Efficiency Losses](#regulator--bec-efficiency-losses)
+- [Systems](#systems)
+  - [Mechanical System](#mechanical-system)
+    - [Motor](#motor)
+    - [Servo Motor](#servo-motor)
+    - [Wheels](#wheels)
+  - [Electrical & Sensor System](#electrical--sensor-system)
+    - [Regulator](#regulator)
+    - [Circuit Diagram](#circuit-diagram)
+- [Software](#software)
+- [Testing](#testing)
+  - [Performance Videos](#performance-videos)
+    - [Open Challenge](#open-challenge)
+    - [Obstacle Challenge](#obstacle-challenge)
+- [Special Thanks](#special-thanks)
+
+---
+
 ## Introduction
 
 We are **Team PlugAndPlayers** from **Santo Domingo, Dominican Republic**, competing in the **2026 WRO Future Engineers** category (Collegiate division). Both of us are **Mechatronics Engineering** students at **Pontificia Universidad Católica Madre y Maestra (PUCMM)**. We participated in the 2025 WRO season on different teams, and this year we joined forces to combine our strengths and give our best 😎.
@@ -12,9 +48,15 @@ We are actively documenting our entire engineering process in this repository—
   <em>Team PlugAndPlayers — Representing PUCMM in WRO 2026 Future Engineers</em>
 </p>
 
-## The Team
+### Abstract
 
-### Team Members
+Our solution is an autonomous vehicle powered by a dual-compute architecture combining **Raspberry Pi** boards for high-level navigation, computer vision, and state-machine logic with **ESP32** microcontrollers for real-time motor control and actuation. 
+
+To perceive the track, detect walls, and obey traffic rules, our system relies purely on **camera and video processing**. Together, this vision-driven software stack and custom hardware chassis execute tight turns, reliable obstacle avoidance, and repeatable parking maneuvers.
+
+### The Team
+
+#### Team Members
 
 <table>
   <tr>
@@ -45,39 +87,78 @@ We are actively documenting our entire engineering process in this repository—
   </tr>
 </table>
 
-### Coach
-* **Jesus Ramirez** — Director of Mechanical and Electrical Engineering, Pontificia Universidad Católica Madre y Maestra (PUCMM)
-* **Alvaro Zapata** — Team Mentor
+#### Coach & Mentors
+- **Jesus Ramirez** — Director of Mechanical and Electrical Engineering, Pontificia Universidad Católica Madre y Maestra (PUCMM)
+- **Alvaro Zapata** — Team Mentor
 
-### Links to Our Socials
-* **GitHub:** https://github.com/10xIvanDev/WRO2026-FE-PlugAndPlayers
-  * Complete source code, CAD files, schematics, and engineering documentation
-* **YouTube:** [https://www.youtube.com/@PlugAndPlayers]
-  * Autonomous test runs, mechanical demos, and competition videos
+#### Links to Our Socials
+- **GitHub:** https://github.com/10xIvanDev/WRO2026-FE-PlugAndPlayers
+  - Complete source code, CAD files, schematics, and engineering documentation
+- **YouTube:** https://www.youtube.com/@PlugAndPlayers
+  - Autonomous test runs, mechanical demos, and competition videos
 
----
+### Engineering Journal
 
-## Abstract
-
-Our solution is an autonomous vehicle powered by a dual-compute architecture combining **Raspberry Pi** boards for high-level navigation, computer vision, and state-machine logic with **ESP32** microcontrollers for real-time motor control and sensor interfacing. 
-
-To perceive the track and obey traffic rules, our system focuses heavily on **camera and video processing** supported by complementary **onboard sensors** for spatial awareness, wall tracking, and orientation. Together, this hardware and software stack drives our custom chassis to execute tight turns, reliable obstacle avoidance, and repeatable parking maneuvers.
----
-
-## Table of Contents
-
-1. [Our Journey & Engineering Process](#1-our-journey--engineering-process)
-2. [Ideas & Systems Thinking Principles](#2-ideas--systems-thinking-principles)
-3. [Mobility & Mechanical Design](#3-mobility--mechanical-design)
-4. [Power & Sensor Architecture](#4-power--sensor-architecture)
-5. [Software Architecture & Obstacle Strategy](#5-software-architecture--obstacle-strategy)
-6. [Testing, Measurements & Calibration](#6-testing-measurements--calibration)
-7. [Repository Structure & Reproducibility](#7-repository-structure--reproducibility)
-8. [Videos & Media](#8-videos--media)
-9. [Special Thanks](#9-special-thanks)
+### Our Overview of the Challenges
 
 ---
 
-## 9. Special Thanks
+## The Robot
+
+### Overview
+
+### First Design
+
+### Design Decisions
+
+### Final Design
+
+---
+
+## Prices
+
+---
+
+## Power
+
+### Power Budget
+
+### Regulator & BEC Efficiency Losses
+
+---
+
+## Systems
+
+### Mechanical System
+
+#### Motor
+
+#### Servo Motor
+
+#### Wheels
+
+### Electrical & Sensor System
+
+#### Regulator
+
+#### Circuit Diagram
+
+---
+
+## Software
+
+---
+
+## Testing
+
+### Performance Videos
+
+#### Open Challenge
+
+#### Obstacle Challenge
+
+---
+
+## Special Thanks
 
 Special thanks to **Jesus Ramirez**, **Alvaro Zapata**, and the **PUCMM Mechanical and Electrical Engineering Department** for their technical mentorship, guidance, and support throughout our build.
