@@ -52,7 +52,7 @@ We are actively documenting our entire engineering process in this repository—
 ### Links to Our Socials
 * **GitHub:** https://github.com/10xIvanDev/WRO2026-FE-PlugAndPlayers
   * Complete source code, CAD files, schematics, and engineering documentation
-* **YouTube:** [https://www.youtube.com/@your_channel]
+* **YouTube:** [https://www.youtube.com/@PlugAndPlayers]
   * Autonomous test runs, mechanical demos, and competition videos
 
 ---
