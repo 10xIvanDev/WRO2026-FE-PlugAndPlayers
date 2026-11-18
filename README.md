@@ -198,13 +198,13 @@ To size our power distribution system and verify safe operating margins under bo
 
 | Component | Supply Rail | Nominal Current | Peak / Stall Current | Nominal Power | Peak Power |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Raspberry Pi 4 + Camera** | $5.0\text{ V}$ | $1.20\text{ A}$ | $2.50\text{ A}$ | $6.00\text{ W}$ | $12.50\text{ W}$ |
-| **ESP32 + MPU-9250 IMU** *(via Pi)* | $5.0\text{ V} / 3.3\text{ V}$ | $0.25\text{ A}$ | $0.50\text{ A}$ | $1.25\text{ W}$ | $2.50\text{ W}$ |
-| **LEGO EV3 Large Motor** *(via L298N)* | $9.0\text{ V}$ | $0.60\text{ A}$ | $1.80\text{ A}$ | $5.40\text{ W}$ | $16.20\text{ W}$ |
-| **Steering Servo Motor** | $5.0\text{ V}–6.0\text{ V}$ | $0.30\text{ A}$ | $1.20\text{ A}$ | $1.80\text{ W}$ | $7.20\text{ W}$ |
-| **Total System Load** | — | **$2.35\text{ A}$** | **$6.00\text{ A}$** | **$14.45\text{ W}$** | **$38.40\text{ W}$** |
+| **Raspberry Pi 4 + Camera** | 5.0 V | 1.20 A | 2.50 A | 6.00 W | 12.50 W |
+| **ESP32 + MPU-9250 IMU** (via Pi) | 5.0 V / 3.3 V | 0.25 A | 0.50 A | 1.25 W | 2.50 W |
+| **LEGO EV3 Large Motor** (via L298N) | 9.0 V | 0.60 A | 1.80 A | 5.40 W | 16.20 W |
+| **Steering Servo Motor** | 5.0 V–6.0 V | 0.30 A | 1.20 A | 1.80 W | 7.20 W |
+| **Total System Load** | — | **2.35 A** | **6.00 A** | **14.45 W** | **38.40 W** |
 
-*(Note: Because the L298N H-bridge introduces an internal bipolar transistor drop of $\approx 1.8\text{ V}–2.0\text{ V}$, the XL4015 buck converter is tuned to $\approx 10.8\text{ V}–11.0\text{ V}$ at the L298N input so the LEGO EV3 motor receives a full $9.0\text{ V}$ across its terminals under load.)*
+> **Note:** Because the L298N H-bridge introduces an internal bipolar transistor drop of ≈ 1.8 V–2.0 V, the XL4015 buck converter is tuned to ≈ 10.8 V–11.0 V at the L298N input so the LEGO EV3 motor receives a full 9.0 V across its terminals under load.
 
 ---
 
@@ -212,9 +212,9 @@ To size our power distribution system and verify safe operating margins under bo
 
 Running a single-board computer (Raspberry Pi 4) alongside inductive actuators (LEGO EV3 DC motor and steering servo) on a compact mobile chassis introduces three critical electrical failure modes that we explicitly designed against:
 
-* **Raspberry Pi Under-Voltage Brownouts:** The Raspberry Pi 4 triggers CPU throttling or sudden reboots if its $5\text{ V}$ rail dips below $4.65\text{ V}$ during peak vision processing or sudden steering corrections.
+* **Raspberry Pi Under-Voltage Brownouts:** The Raspberry Pi 4 triggers CPU throttling or sudden reboots if its 5 V rail dips below 4.65 V during peak vision processing or sudden steering corrections.
 * **Inductive Back-EMF & Current Spikes:** Rapid acceleration, braking, or hard steering stalls generate sharp current transients and voltage ripple on the power bus that can corrupt camera frames or reset microcontroller logic.
-* **Thermal & Voltage Drop Losses in the L298N:** Unlike modern MOSFET drivers, the L298N drops roughly $2\text{ V}$ internally, reducing motor torque if fed directly from a standard $9\text{ V}$ source unless compensated upstream.
+* **Thermal & Voltage Drop Losses in the L298N:** Unlike modern MOSFET drivers, the L298N drops roughly 2 V internally, reducing motor torque if fed directly from a standard 9 V source unless compensated upstream.
 
 ---
 
@@ -222,10 +222,10 @@ Running a single-board computer (Raspberry Pi 4) alongside inductive actuators (
 
 To eliminate cross-talk between high-current actuators and sensitive digital compute hardware, our electrical architecture splits the main battery bus into **three physically isolated DC-DC buck conversion stages**:
 
-1. **Compute Rail — Dedicated $5\text{ V} / 5\text{ A}$ Buck Converter:** Powers the **Raspberry Pi 4** exclusively, which in turn supplies regulated $5\text{ V}$ and $3.3\text{ V}$ to the **ESP32** and **MPU-9250 IMU**. Isolating this rail ensures motor or servo current spikes never pull down the Pi's core voltage.
-2. **Drivetrain Rail — XL4015 Step-Down Converter ($5\text{ A}$ max) + L298N Driver:** Steps down the battery pack voltage to feed the **L298N H-bridge**, delivering a regulated $9.0\text{ V}$ to the **LEGO EV3 drive motor** with ample current headroom for stall conditions.
-3. **Steering Rail — LM2596 Step-Down Converter ($3\text{ A}$ max):** Dedicated strictly to the **steering servo motor**, isolating high-frequency PWM switching noise and stall transients from both the compute rail and the main drive motor.
-4. **Common Ground & Decoupling:** All three buck converters share a common star-ground reference to guarantee clean UART communication (Raspberry Pi $\leftrightarrow$ ESP32) and accurate I2C readings from the MPU-9250, supported by bulk electrolytic decoupling capacitors across the regulator outputs.
+1. **Compute Rail — Dedicated 5 V / 5 A Buck Converter:** Powers the **Raspberry Pi 4** exclusively, which in turn supplies regulated 5 V and 3.3 V to the **ESP32** and **MPU-9250 IMU**. Isolating this rail ensures motor or servo current spikes never pull down the Pi's core voltage.
+2. **Drivetrain Rail — XL4015 Step-Down Converter (5 A max) + L298N Driver:** Steps down the battery pack voltage to feed the **L298N H-bridge**, delivering a regulated 9.0 V to the **LEGO EV3 drive motor** with ample current headroom for stall conditions.
+3. **Steering Rail — LM2596 Step-Down Converter (3 A max):** Dedicated strictly to the **steering servo motor**, isolating high-frequency PWM switching noise and stall transients from both the compute rail and the main drive motor.
+4. **Common Ground & Decoupling:** All three buck converters share a common star-ground reference to guarantee clean UART communication (Raspberry Pi ↔ ESP32) and accurate I2C readings from the MPU-9250, supported by bulk electrolytic decoupling capacitors across the regulator outputs.
 
 ---
 
@@ -233,12 +233,13 @@ To eliminate cross-talk between high-current actuators and sensitive digital com
 
 * **Battery Pack:** `[Insert Battery Specs — e.g., 3S 11.1 V (12.6 V max) 2200 mAh 30C LiPo — 24.42 Wh]`
 * **Regulated Voltage Rails:**
-  * **Logic & Vision:** $5.0\text{ V}$ @ $5.0\text{ A}$ max (Dedicated $5\text{ A}$ Buck Regulator)
-  * **Drive Motor:** $9.0\text{ V}$ effective @ $5.0\text{ A}$ max (XL4015 Buck + L298N H-Bridge)
-  * **Steering Servo:** $5.0\text{ V}–6.0\text{ V}$ @ $3.0\text{ A}$ max (LM2596 Buck Regulator)
-* **Nominal Operating Power:** $\approx 14.45\text{ W}$ (accounting for $\sim 88\%$ average switching converter efficiency, $\approx 16.4\text{ W}$ drawn from battery)
-* **Worst-Case Peak Power:** $\approx 38.40\text{ W}$ (all actuators at stall + full CPU load)
+  * **Logic & Vision:** 5.0 V @ 5.0 A max (Dedicated 5 A Buck Regulator)
+  * **Drive Motor:** 9.0 V effective @ 5.0 A max (XL4015 Buck + L298N H-Bridge)
+  * **Steering Servo:** 5.0 V–6.0 V @ 3.0 A max (LM2596 Buck Regulator)
+* **Nominal Operating Power:** ≈ 14.45 W (accounting for ~88% average switching converter efficiency, ≈ 16.4 W drawn from battery)
+* **Worst-Case Peak Power:** ≈ 38.40 W (all actuators at stall + full CPU load)
 * **Estimated Continuous Runtime:** `[Insert based on battery Wh — e.g., ~70 minutes at nominal load on a 24.4 Wh 3S pack, covering 20+ full competition runs]`
+
 
 ---
 
