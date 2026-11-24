@@ -121,7 +121,7 @@ At its core, the **WRO Future Engineers** category challenges teams to design, b
 Succeeding in these challenges tests a wide spectrum of multidisciplinary engineering skills:
 - **Mechanical & Mobility Engineering:** Balancing drivetrain torque, top speed, chassis weight distribution, and Ackermann steering geometry to achieve tight turning radii and repeatable trajectory tracking.
 - **Electronics & Power Systems:** Designing clean power distribution, managing voltage regulation and efficiency losses, and isolating compute electronics from motor noise.
-- **Computer Vision & Embedded Control:** Processing real-time camera feeds under variable lighting conditions, fusing IMU orientation feedback, and executing low-latency motor and servo control across our dual-microcontroller architecture (Raspberry Pi 4 + ESP32).
+- **Computer Vision & Embedded Control:** Processing real-time camera feeds under variable lighting conditions, fusing IMU orientation feedback, and executing low-latency motor and servo control across our SBC and SBM architecture (Raspberry Pi 4 + ESP32).
 - **Systems Integration & Debugging:** Ensuring mechanical, electrical, and software subsystems operate seamlessly as a unified machine under strict competition time constraints.
 
 Throughout this season, our attitude toward engineering problems is rooted in **systematic root-cause analysis and rapid iteration**. When a test run fails—whether due to mechanical slip, voltage drop, or camera glare—we treat it as diagnostic data: we isolate the variable, measure the behavior, implement a targeted fix, and validate the improvement on the track.
@@ -220,7 +220,7 @@ Measuring **24 cm × 14 cm × 25 cm** (L × W × H), the robot sits well within 
 
 ### Power Budget
 
-To verify safe operating margins under both normal cruising and simultaneous actuator stall conditions, we calculated the nominal and peak power draw of every onboard load:
+To verify safe margins under both normal cruising and in the case of the motor or the servo stalling, we calculated the nominal and peak power draw of every load:
 
 | Component | Supply Rail | Nominal Current | Peak / Stall Current | Nominal Power | Peak Power |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -272,6 +272,8 @@ To eliminate cross-talk between high-current actuators and sensitive digital com
 
 ### Mechanical System
 
+Our primary goal for the mechanical system was to create a compact and lightweight chassis capable of navigating tight track corners. We also designed the structure around a modular layout so individual subassemblies can be easily assembled, adjusted, or replaced during testing. Most importantly, every electronic module and our custom perfboard remain openly accessible without disassembling the frame, allowing us to quickly probe and verify voltages across the robot whenever troubleshooting is needed.
+
 #### Motor
 
 We selected the **LEGO EV3 Large Motor** to drive the rear wheels at 9.0 V through the L298N H-bridge. Its high torque output helps the vehicle turn more easily through tight corners, while its compact housing and output shaft placement make it straightforward to mount directly into our 3D-printed chassis. We have already used this motor in previous robotics projects, proving through hands-on testing that it operates safely and reliably across an 8 V to 12 V supply range. Additionally, the motor includes a high-precision built-in dual-channel quadrature encoder—and even though our primary navigation relies on vision and the IMU, having that encoder feedback available gives us a solid hardware backup for odometry if needed.
@@ -279,11 +281,11 @@ We selected the **LEGO EV3 Large Motor** to drive the rear wheels at 9.0 V throu
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="assets/components/ev3-motor.jpg" alt="LEGO EV3 Large Motor" width="280"/><br>
+      <img src="" alt="LEGO EV3 Large Motor" width="280"/><br>
       LEGO EV3 Large Motor
     </td>
     <td align="center" width="50%">
-      <img src="assets/robot/motor-mount.jpg" alt="EV3 Motor Mounted in Chassis" width="280"/><br>
+      <img src="" alt="EV3 Motor Mounted in Chassis" width="280"/><br>
       Rear Drivetrain Mounting in Chassis
     </td>
   </tr>
@@ -298,11 +300,11 @@ We chose the **Hitec HS-485HB** servo paired with a **25T aluminum servo horn** 
 <table>
   <tr>
     <td align="center" width="50%">
-      <img src="assets/components/hs485hb-servo.jpg" alt="Hitec HS-485HB Servo Motor" width="280"/><br>
+      <img src="mobility-and-mechanical-design" alt="Hitec HS-485HB Servo Motor" width="280"/><br>
       Hitec HS-485HB Servo & 25T Aluminum Horn
     </td>
     <td align="center" width="50%">
-      <img src="assets/robot/servo-mount.jpg" alt="Steering Servo Mounted in Chassis" width="280"/><br>
+      <img src="mobility-and-mechanical-design/pictures/steeringfront - Copy.jpg" alt="Steering Servo Mounted in Chassis" width="280"/><br>
       Front Ackermann Steering Integration
     </td>
   </tr>
@@ -310,25 +312,70 @@ We chose the **Hitec HS-485HB** servo paired with a **25T aluminum servo horn** 
 
 #### Wheels
 
+We selected these **4 RC wheels** because we already had them available, and their small, compact profile fits well within our narrow 14 cm chassis footprint. Additionally, their pre-existing mounting holes made it straightforward to design custom 3D-printed hubs and adapters to couple them cleanly to the rear drive axle and front steering knuckles.
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="mobility-and-mechanical-design/pictures/wheel.jpg" alt="RC Wheels" width="280"/><br>
+      RC Wheels
+    </td>
+    <td align="center" width="50%">
+      <img src="mobility-and-mechanical-design/pictures/fullchassisside.jpg" alt="Wheels Mounted on Chassis" width="280"/><br>
+      Wheel Coupling and Mounting on Chassis
+    </td>
+  </tr>
+</table>
+
+##### Speed Calculation
+
+<p align="center">
+  <img src="assets/robot/speed-calculation.jpg" alt="Robot Speed Calculation" width="520"/>
+</p>
+
 ### Electrical & Sensor System
+
+Our electrical architecture integrates power distribution, an SBC and SBM compute setup (Raspberry Pi 4 + ESP32), and sensor interfacing onto a centralized, accessible perfboard layout—see our [Power and Sensor Architecture documentation](Power-and-Sensor-Architecture/README.md) for full schematics and specs.
 
 #### Regulator
 
+The three 18650 batteries sit inside the chassis in a 3-slot series holder, feeding raw battery voltage directly into our central perfboard to establish a unified common ground. From the perfboard, power branches out independently to two **XL4015** buck converters (5.1 V for the Raspberry Pi 4 and 5.5 V for the Hitec HS-485HB servo) and one **LM2596** buck converter (9.0 V for the L298N motor driver). All three regulators are mounted along the side of the chassis so we can easily test and adjust output voltages without disassembling the robot.
+
+<p align="center">
+  <img src="assets/electronics/regulators-setup.jpg" alt="Side-Mounted Voltage Regulators" width="480"/>
+</p>
+
 #### Circuit Diagram
+
+The schematic below illustrates the complete electrical connections across the 3S 18650 battery pack, central perfboard, isolated buck converters, dual-compute controllers (Raspberry Pi 4 and ESP32), sensors, and actuators.
+
+<p align="center">
+  <img src="Power-and-Sensor-Architecture/GeneralSchematic.png" alt="Full Electrical Circuit Diagram" width="750"/>
+  <br>
+  Complete Robot Electrical Circuit Diagram
+</p>
 
 ---
 
 ## Software
 
+Our software stack splits high-level computer vision and navigation on the **Raspberry Pi 4 (SBC)** from real-time motor and servo actuation on the **ESP32 (SBM)** over USB serial. Explore the full source code, control algorithms, and communication protocol in our [Software Architecture documentation](Software/README.md).
+
 ---
 
 ## Testing
+
+All test runs, driving demos, and competition trials are indexed in our [Performance Videos directory](Videos/README.md) and hosted on our [YouTube channel](https://www.youtube.com/@PlugAndPlayers).
 
 ### Performance Videos
 
 #### Open Challenge
 
+- **Video Link:** [Watch on YouTube](https://youtu.be/gJp8MfcsAoE)
+
 #### Obstacle Challenge
+
+- **Video Link:** [Watch on YouTube](https://www.youtube.com/@PlugAndPlayers)
 
 ---
 
